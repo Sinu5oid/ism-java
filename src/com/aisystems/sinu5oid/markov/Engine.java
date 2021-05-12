@@ -8,12 +8,19 @@ import java.util.HashMap;
 
 public class Engine {
     public Engine(double[][] transitionMatrix, int startingNode) throws InvalidTransitionMatrixException {
-        validateMatrix(transitionMatrix);
+        validateMatrix(transitionMatrix, comparisonTolerance);
 
         this.transitionMatrix = transitionMatrix;
         this.startingNode = startingNode;
         this.stepsCount = transitionMatrix.length;
         this.cacheMap = new HashMap<>();
+        this.comparisonTolerance = defaultComparisonTolerance;
+    }
+
+    public Engine(double[][] transitionMatrix, int startingNode, double comparisonTolerance) throws InvalidTransitionMatrixException {
+        this(transitionMatrix, startingNode);
+
+        this.comparisonTolerance = comparisonTolerance;
     }
 
     public void setStepsCount(int stepsCount) {
@@ -28,7 +35,7 @@ public class Engine {
             return cached;
         }
 
-        if (stepIndex < 0) {
+        if (stepIndex <= 0) {
             double[] res = new double[transitionMatrix.length];
             res[startingNode] = 1d;
 
@@ -43,7 +50,11 @@ public class Engine {
         return res;
     }
 
-    public double[] getEmpiricProbabilityAt(@NotNull int[][] implementations, int transitionMatrixLength, int stepIndex) {
+    public double[] getEmpiricProbabilityAt(@NotNull int[][] implementations, int stepIndex) {
+        return getEmpiricProbabilityAt(implementations, transitionMatrix.length, stepIndex);
+    }
+
+    public static double[] getEmpiricProbabilityAt(@NotNull int[][] implementations, int transitionMatrixLength, int stepIndex) {
         double[] res = new double[transitionMatrixLength];
 
         for (int[] implementation : implementations) {
@@ -99,7 +110,7 @@ public class Engine {
         return new RandomGenerator(probRow);
     }
 
-    private static void validateMatrix(double[][] transitionMatrix) throws InvalidTransitionMatrixException {
+    private static void validateMatrix(double[][] transitionMatrix, double comparisonTolerance) throws InvalidTransitionMatrixException {
         if (transitionMatrix == null) {
             throw new InvalidTransitionMatrixException("transition matrix is null");
         }
@@ -136,10 +147,12 @@ public class Engine {
         }
     }
 
+    public static final double defaultComparisonTolerance = 0.000001d;
+
     protected final double[][] transitionMatrix;
     protected final int startingNode;
     protected int stepsCount;
 
     private final HashMap<String, double[]> cacheMap;
-    private final static double comparisonTolerance = 0.000001d;
+    private double comparisonTolerance;
 }

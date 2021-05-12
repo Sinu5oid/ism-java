@@ -36,8 +36,8 @@ public class Runner {
             double[][] theoreticalProbabilities = new double[stepsCount + 1][];
             double[][] empiricProbabilities = new double[stepsCount + 1][];
             for (int i = 0; i < stepsCount + 1; i++) {
-                theoreticalProbabilities[i] = engine.getTheoreticalProbabilityAt(i - 1);
-                empiricProbabilities[i] = engine.getEmpiricProbabilityAt(implementations, transitionMatrix.length, i);
+                theoreticalProbabilities[i] = engine.getTheoreticalProbabilityAt(i);
+                empiricProbabilities[i] = engine.getEmpiricProbabilityAt(implementations, i);
             }
             logger.info("probabilities collected");
 
