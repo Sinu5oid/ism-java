@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class Engine {
     public Engine(double[][] transitionMatrix, int startingNode) throws InvalidTransitionMatrixException {
-        validateMatrix(transitionMatrix, comparisonTolerance);
+        validateMatrix(transitionMatrix, defaultComparisonTolerance);
 
         this.transitionMatrix = transitionMatrix;
         this.startingNode = startingNode;
@@ -18,8 +18,12 @@ public class Engine {
     }
 
     public Engine(double[][] transitionMatrix, int startingNode, double comparisonTolerance) throws InvalidTransitionMatrixException {
-        this(transitionMatrix, startingNode);
+        validateMatrix(transitionMatrix, comparisonTolerance);
 
+        this.transitionMatrix = transitionMatrix;
+        this.startingNode = startingNode;
+        this.stepsCount = transitionMatrix.length;
+        this.cacheMap = new HashMap<>();
         this.comparisonTolerance = comparisonTolerance;
     }
 
